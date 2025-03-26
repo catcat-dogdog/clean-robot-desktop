@@ -1,0 +1,14 @@
+# # 回原点point配置
+# home_point_x: 0.2
+# home_point_y: 0.0
+# home_point_yaw: 0.0
+
+# # 桌子一的位置信息
+# desktop1_point_x: 0.86
+# desktop1_point_y: 0.0
+# desktop1_point_yaw: 0.0
+
+# # 桌子二的位置信息
+# desktop2_point_x: 1.3
+# desktop2_point_y: 0.0
+# desktop2_point_yaw: -1.55

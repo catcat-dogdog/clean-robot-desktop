@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="robot_slam" type="servo_controller.py" respawn="false" name="servo_controller_node" output="screen">
+    </node>
+</launch>
+

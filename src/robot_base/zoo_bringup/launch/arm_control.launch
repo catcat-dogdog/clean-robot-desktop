@@ -1,0 +1,8 @@
+<launch>
+    <node name="zoo_driver" pkg="zoo_bringup" type="zoo_driver" output="screen">
+        <rosparam file="$(find zoo_bringup)/params/base_params_with_imu.yaml" command="load"/>
+    </node>
+    <node name="s2a_arm_driver" pkg="zoo_bringup" type="s2a_arm_driver" output="screen">
+        <param name="arm_control_action" value="/arm_joint_controller/follow_joint_trajectory" />
+    </node>
+</launch>

@@ -1,0 +1,40 @@
+<launch>
+    <!-- 1 四轮全向底盘  2 三轮全向底盘  3 2轮差速底盘 -->
+    <arg name="chassis_type" default="2"/>
+
+    <!-- 机器人通信节点 -->
+    <node name="zoo_driver" pkg="zoo_bringup" type="zoo_driver" output="screen">
+        <rosparam file="$(find zoo_bringup)/params/base_params_with_imu.yaml" command="load"/>
+        <param name="chassis_type" type="int" value="$(arg chassis_type)"/>
+    </node>
+
+    <!-- tf静态变换-机体，激光雷达，imu -->
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_base_link" 
+        args="0 0 0 0 0 0 base_footprint base_link 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_laser_link" 
+        args="0 0 0.1 0 0 0 /base_footprint /laser_link 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="base_footprint_to_imu_link"
+        args="0 0 0 0 0 0 /base_footprint /imu_link 100" />
+    
+    <!-- 机器人模型加载 -->
+    <param name="robot_description" command="$(find xacro)/xacro -i '$(find zoo_description)/urdf/zoo_three_omni_wheel.urdf'" />
+
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+        <param name="rate" value="40.0"/>
+    </node>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
+        <param name="rate" value="40.0"/>
+    </node>
+
+    <!--ekf融合滤波-->
+    <include file="$(find zoo_bringup)/launch/robot_pose_ekf.launch" />
+
+    <!--激光雷达-->
+    <include file="$(find bluesea2)/launch/lidar_e200_w3s.launch" />
+
+    <!--imu -->
+    <include file="$(find handsfree_ros_imu)/launch/imu_all.launch" />
+
+</launch>

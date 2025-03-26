@@ -1,0 +1,28 @@
+<launch>
+  <param name="use_sim_time" value="false" />
+
+  <arg name="map_name" default="my_lab.yaml" />
+
+  <!-- car_mode：小车类型  diff:2轮差速  omni:3轮全向  mec:4轮麦克纳姆轮全向 -->
+  <arg name="car_mode" default="omni"/>
+  <!-- 局部路径规划使用的算法 dwa,teb -->
+  <arg name="global_planner_type" default="teb"/>
+
+  <!-- 加载地图服务 -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find robot_slam)/maps/$(arg map_name)"/>
+
+  <!-- 加载amcl定位 -->
+  <include file="$(find robot_slam)/launch/include/amcl.launch.xml" />
+
+  <!-- move-base加载参数 -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/local_costmap_params.yaml" command="load"/>
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/$(arg global_planner_type)_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/move_base_params.yaml" command="load" />
+    <rosparam file="$(find robot_slam)/params/params_$(arg car_mode)/global_planner_params.yaml" command="load" />
+  </node>
+  
+</launch>

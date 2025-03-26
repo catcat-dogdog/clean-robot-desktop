@@ -1,0 +1,15 @@
+<launch>
+  <param name="use_sim_time" value="false" />
+  <!-- pbstream的地址与名称 -->
+  <arg name="load_state_filename" default="$(find robot_slam)/maps/carto.pbstream"/>
+
+  <node name="cartographer_node" pkg="cartographer_ros"
+        type="cartographer_node" args="
+          -configuration_directory  $(find robot_slam)/params/carto
+          -configuration_basename cartographer_localization.lua"
+      output="screen">
+   <remap from="/scan" to="/scan" />
+   <remap from="/odom" to="/wheel_odom" /> 
+   <remap from="/imu" to="/imu/data" />
+  </node> 
+</launch>
